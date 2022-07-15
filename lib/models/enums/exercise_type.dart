@@ -1,0 +1,4 @@
+enum ExerciseType {
+  rest,
+  video,
+}

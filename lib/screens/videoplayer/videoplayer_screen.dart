@@ -62,10 +62,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: SystemUiOverlay.values,
-    ); // to re-show bars
     super.dispose();
   }
 }
@@ -80,11 +76,6 @@ class _VideoPlayerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
     //Sleep and video.
     return Scaffold(
       extendBody: true,
@@ -120,17 +111,19 @@ class _VideoPlayerView extends StatelessWidget {
                   child: CircleTimer(),
                 )
               else
-                Positioned(
+                AnimatedPositioned(
                   top: 15,
                   left: 20,
+                  duration: const Duration(milliseconds: 350),
                   child: MainTimer(preview: preview),
                 ),
-              const Positioned(
+              const AnimatedPositioned(
                 bottom: 15,
                 left: 20,
+                duration: Duration(milliseconds: 350),
                 child: Information(),
               ),
-              Positioned(
+              AnimatedPositioned(
                 bottom: 15,
                 right: preview
                     ? MediaQuery.of(context).size.width * .472
@@ -138,11 +131,13 @@ class _VideoPlayerView extends StatelessWidget {
                 left: preview
                     ? MediaQuery.of(context).size.width * .472
                     : MediaQuery.of(context).size.width * .35,
+                duration: const Duration(milliseconds: 350),
                 child: MainController(preview: preview),
               ),
-              Positioned(
+              AnimatedPositioned(
                 bottom: 15,
                 right: 20,
+                duration: const Duration(milliseconds: 350),
                 child: SecondaryController(preview: preview),
               ),
             ],

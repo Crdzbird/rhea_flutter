@@ -28,26 +28,22 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     init();
   }
 
-  void init() {
-    _controller = VideoPlayerController.network(
-      exercises[_position].videoUrl,
-      formatHint: VideoFormat.hls,
-      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-    );
-    _controller?.addListener(checkVideo);
-    _controller!.initialize();
-    for (final element in exercises) {
-      _totalDuration += element.duration;
-    }
-  }
-
   final List<Exercise> exercises;
-  int _totalDuration = 0;
+  Duration _totalDuration = Duration.zero;
+  Duration _fixedDuration = Duration.zero;
   int _position = 0;
   int get position => _position;
-  int _currentDuration = 0;
-  int get currentDuration => _currentDuration;
-  int get totalDuration => _totalDuration;
+  double _progress = 0;
+  double get progress => _progress;
+  Duration _currentDuration = Duration.zero;
+  Duration _currentRemainingTime = Duration.zero;
+  Duration _totalRemainingTime = Duration.zero;
+  Duration _passedTime = Duration.zero;
+  Duration get currentRemainingTime => _currentRemainingTime;
+  Duration get currentDuration => _currentDuration;
+  Duration get totalDuration => _totalDuration;
+  Duration get totalRemainingTime => _totalRemainingTime;
+  Duration get passedTime => _passedTime;
   VideoPlayerController? _controller;
   VideoPlayerController? get controller => _controller;
 
@@ -56,6 +52,34 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   bool isInitialized() => _controller?.value.isInitialized ?? false;
   bool _isVideoFinished = false;
   bool get isVideoFinished => _isVideoFinished;
+
+  void init() {
+    _controller = VideoPlayerController.network(
+      exercises[_position].videoUrl,
+      formatHint: VideoFormat.hls,
+      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+    );
+    _controller?.addListener(checkVideo);
+
+    _controller!.initialize();
+    var _seconds = 0;
+    var _fixedSeconds = 0;
+    var _passedSeconds = 0;
+    exercises
+        .getRange(0, _position)
+        .forEach((element) => _passedSeconds += element.duration);
+    for (final element in exercises.skip(_position).toList()) {
+      if (_position == 0) {
+        _fixedSeconds += element.duration;
+      }
+      _seconds += element.duration;
+    }
+    if (position == 0) {
+      _fixedDuration = Duration(seconds: _fixedSeconds);
+    }
+    _passedTime = Duration(seconds: _passedSeconds);
+    _totalDuration = Duration(seconds: _seconds);
+  }
 
   void _videoPlayerInit(
     VideoInitializeEvent event,
@@ -118,23 +142,25 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void checkVideo() {
-    _currentDuration = _controller!.value.position.inMilliseconds;
+    _currentDuration = _controller!.value.position;
+    _currentRemainingTime = _controller!.value.duration - _currentDuration;
+    _totalRemainingTime = _totalDuration - _currentDuration;
+    _progress = double.parse(
+      ((_currentDuration + _passedTime).inSeconds / _fixedDuration.inSeconds)
+          .toStringAsFixed(3),
+    );
     add(VideoPositionEvent(duration: _controller!.value.position));
     if (_controller != null &&
         _controller!.value.isInitialized &&
         _controller?.value.position == _controller?.value.duration) {
       _isVideoFinished = true;
       if (_position + 1 < exercises.length) {
-        print('NEXT VIDEO');
         _position++;
         init();
         play();
-        // mapEventToState(
-        //   VideoInitializeEvent(url: exercises[_position].videoUrl),
-        // );
         return;
       }
-      _isVideoFinished = false;
+      _isVideoFinished = true;
       print('PLAYERVIDEO EXERCISE SESSION COMPLETED');
     }
   }
@@ -229,7 +255,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         ),
       ],
     );
-    if (result != null && !result) await controller?.play();
+    if (result != null && result) await routemasterDelegate.pop();
+    await controller?.play();
   }
 
   @override

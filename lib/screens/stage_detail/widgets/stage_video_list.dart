@@ -17,7 +17,7 @@ class StageVideoList extends StatefulWidget {
 }
 
 class _StageVideoListState extends State<StageVideoList> {
-  var _dragExtend = 0.1;
+  var _dragExtend = 0.15;
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -27,8 +27,8 @@ class _StageVideoListState extends State<StageVideoList> {
         return false;
       },
       child: DraggableScrollableSheet(
-        initialChildSize: 0.1,
-        minChildSize: 0.1,
+        initialChildSize: 0.15,
+        minChildSize: 0.15,
         builder: (BuildContext context, ScrollController scrollController) {
           return DecoratedBox(
             decoration: BoxDecoration(
@@ -40,7 +40,7 @@ class _StageVideoListState extends State<StageVideoList> {
               boxShadow: [
                 BoxShadow(
                   offset: const Offset(0, -2),
-                  blurRadius: 6,
+                  blurRadius: 4,
                   color: Theme.of(context).shadowColor,
                 ),
               ],
@@ -113,15 +113,16 @@ class _StageVideoListState extends State<StageVideoList> {
                     itemCount: widget.workSession.videoSections.length,
                   ),
                 ),
-                Visibility(
-                  visible: _dragExtend > 0.2,
-                  child: AnimatedOpacity(
-                    opacity: _dragExtend <= 0.2 ? 0 : _dragExtend,
-                    duration: const Duration(milliseconds: 300),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 15),
-                        SolidButton(
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  reverseDuration: const Duration(milliseconds: 200),
+                  transitionBuilder: (child, animation) => AnimatedScale(
+                    duration: const Duration(milliseconds: 200),
+                    scale: animation.value,
+                    child: child,
+                  ),
+                  child: _dragExtend > 0.2
+                      ? SolidButton(
                           background: turquoise,
                           borderRadius: 50,
                           width: MediaQuery.of(context).size.width * 0.6,
@@ -150,11 +151,8 @@ class _StageVideoListState extends State<StageVideoList> {
                               )
                             },
                           ),
-                        ),
-                        const SizedBox(height: 15),
-                      ],
-                    ),
-                  ),
+                        )
+                      : const SizedBox.shrink(),
                 ),
               ],
             ),

@@ -17,6 +17,8 @@ import 'package:rhea_app/navigation/routes.dart';
 import 'package:rhea_app/repositories/network/remote/data_source/profile/implementation/profile_implementation.dart';
 import 'package:rhea_app/repositories/network/remote/data_source/session/implementation/session_implementation.dart';
 import 'package:rhea_app/styles/theme_context.dart';
+import 'package:rhea_app/utils/crontask/crontask.dart';
+import 'package:rhea_app/utils/crontask/crontask_provider.dart';
 import 'package:routemaster/routemaster.dart';
 
 class App extends StatelessWidget {
@@ -24,10 +26,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // CrontaskProvider.cron.schedule(
-    //   Schedule.parse('* */2 * * *'),
-    //   () => SessionImplementation().refreshToken(),
-    // );
+    CrontaskProvider.cron.schedule(
+      Schedule.parse('0 */5 * * *'),
+      () => SessionImplementation().refreshToken(),
+    );
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<ProfileImplementation>(
@@ -55,6 +57,8 @@ class App extends StatelessWidget {
                     return MaterialApp.router(
                       darkTheme: context.dark,
                       theme: context.light,
+                      highContrastDarkTheme: context.dark,
+                      highContrastTheme: context.light,
                       themeMode: themeState.theme,
                       debugShowCheckedModeBanner: false,
                       localizationsDelegates: const [

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rhea_app/models/exercise.dart';
@@ -54,13 +55,15 @@ class ExerciseDetailScreen extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          exercises[0].previewImageUrl,
+                        child: CachedNetworkImage(
+                          imageUrl: exercises[0].previewImageUrl,
                           fit: BoxFit.fill,
                           filterQuality: FilterQuality.high,
                         ),
                       ),
-                      Align(
+                      AnimatedAlign(
+                        duration: const Duration(milliseconds: 350),
+                        alignment: AlignmentDirectional.center,
                         child: SvgPicture.asset(
                           'assets/svg/ic_play.svg',
                           color: white,

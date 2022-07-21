@@ -57,7 +57,8 @@ class _StageScreen extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              Align(
+              AnimatedAlign(
+                duration: const Duration(milliseconds: 350),
                 alignment: AlignmentDirectional.centerStart,
                 child: SvgPicture.asset(
                   'assets/svg/ic_rhea.svg',
@@ -80,7 +81,8 @@ class _StageScreen extends StatelessWidget {
               const SizedBox(height: 30),
               const StageSessionTile(),
               const SizedBox(height: 30),
-              const Align(
+              const AnimatedAlign(
+                duration: Duration(milliseconds: 350),
                 alignment: AlignmentDirectional.centerStart,
                 child: BreathworkSegment(),
               ),

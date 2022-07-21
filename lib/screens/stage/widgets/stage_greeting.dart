@@ -14,7 +14,8 @@ class StageGreeting extends StatelessWidget {
         create: (_) => ProfileBloc(
           profileImplementation: context.read<ProfileImplementation>(),
         ),
-        child: const Align(
+        child: const AnimatedAlign(
+          duration: Duration(milliseconds: 350),
           alignment: AlignmentDirectional.centerStart,
           child: _StageGreeting(),
         ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rhea_app/extensions/int_extension.dart';
@@ -31,18 +32,19 @@ class IosListTile extends StatelessWidget {
                     topLeft: Radius.circular(20),
                     bottomLeft: Radius.circular(20),
                   ),
-                  child: Image.network(
-                    exercise.previewImageUrl,
+                  child: CachedNetworkImage(
+                    imageUrl: exercise.previewImageUrl,
                     width: MediaQuery.of(context).size.width * 0.2,
                     height: MediaQuery.of(context).size.height,
                     fit: BoxFit.cover,
                     filterQuality: FilterQuality.high,
                   ),
                 ),
-                Positioned(
+                AnimatedPositioned(
                   top: 0,
                   left: MediaQuery.of(context).size.width * 0.05,
                   bottom: 0,
+                  duration: const Duration(milliseconds: 350),
                   child: SvgPicture.asset(
                     'assets/svg/ic_play.svg',
                     color: white,

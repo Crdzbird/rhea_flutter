@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rhea_app/blocs/video/player/player_bloc.dart';
 import 'package:rhea_app/blocs/video/visibility/visibility_cubit.dart';
-import 'package:rhea_app/extensions/int_extension.dart';
+import 'package:rhea_app/extensions/duration_extension.dart';
 import 'package:rhea_app/screens/videoplayer/widgets/circle_timer.dart';
 import 'package:rhea_app/shared/widgets/circular_percent_indicator.dart';
 import 'package:rhea_app/styles/color.dart';
@@ -39,7 +39,7 @@ class MainTimer extends StatelessWidget {
                           radius: MediaQuery.of(context).size.width * 0.015,
                           progressColor: turquoise,
                           backgroundColor: smokeyGrey,
-                          percent: .3,
+                          percent: context.watch<PlayerBloc>().progress,
                           animation: true,
                           animateFromLastPercent: true,
                           animationDuration: 300,
@@ -47,12 +47,10 @@ class MainTimer extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          context.watch<PlayerBloc>().totalDuration < 0
-                              ? '00:00'
-                              : context
-                                  .watch<PlayerBloc>()
-                                  .totalDuration
-                                  .toMinutesAndSeconds,
+                          context
+                              .watch<PlayerBloc>()
+                              .totalRemainingTime
+                              .toMinutesAndSeconds,
                           style:
                               Theme.of(context).textTheme.titleSmall?.copyWith(
                                     fontWeight: FontWeight.bold,

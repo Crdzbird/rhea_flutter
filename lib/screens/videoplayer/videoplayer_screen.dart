@@ -75,13 +75,10 @@ class _VideoPlayerView extends StatelessWidget {
   final String stageId;
 
   @override
-  Widget build(BuildContext context) {
-    //Sleep and video.
-    return Scaffold(
-      extendBody: true,
-      body: BlocBuilder<PlayerBloc, PlayerState>(
-        builder: (context, state) {
-          return Stack(
+  Widget build(BuildContext context) => Scaffold(
+        extendBody: true,
+        body: BlocBuilder<PlayerBloc, PlayerState>(
+          builder: (context, state) => Stack(
             children: [
               GestureDetector(
                 onTap: () => context.read<VisibilityCubit>().change(),
@@ -102,9 +99,7 @@ class _VideoPlayerView extends StatelessWidget {
                 ),
               ),
               if (context
-                      .select(
-                        (PlayerBloc bloc) => bloc.exercises[bloc.position],
-                      )
+                      .select((PlayerBloc bloc) => bloc.exercise)
                       .toExerciseType ==
                   ExerciseType.rest)
                 const Center(
@@ -138,12 +133,12 @@ class _VideoPlayerView extends StatelessWidget {
                 bottom: 15,
                 right: 20,
                 duration: const Duration(milliseconds: 350),
-                child: SecondaryController(preview: preview),
+                child: context.select((PlayerBloc bloc) => bloc.isFinalized())
+                    ? const SizedBox.shrink()
+                    : SecondaryController(preview: preview),
               ),
             ],
-          );
-        },
-      ),
-    );
-  }
+          ),
+        ),
+      );
 }

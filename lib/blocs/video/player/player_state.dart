@@ -17,6 +17,8 @@ class VideoReadyState extends PlayerState {
   List<Object> get props => [duration];
 }
 
+class VideoFinishedState extends PlayerState {}
+
 class VideoPlayingState extends PlayerState {
   const VideoPlayingState({required this.duration});
   final Duration duration;

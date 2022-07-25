@@ -27,6 +27,13 @@ class VideoPlayEvent extends PlayerEvent {
   List<Object?> get props => [currentDuration];
 }
 
+class VideoPlayCompletedEvent extends PlayerEvent {
+  VideoPlayCompletedEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class VideoPauseEvent extends PlayerEvent {
   VideoPauseEvent({required this.currentDuration});
   final Duration currentDuration;

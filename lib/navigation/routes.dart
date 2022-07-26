@@ -12,6 +12,7 @@ import 'package:rhea_app/repositories/network/remote/data_source/work_session/im
 import 'package:rhea_app/screens/authentication/authentication_screen.dart';
 import 'package:rhea_app/screens/authentication/email/email_screen.dart';
 import 'package:rhea_app/screens/dashboard/dashboard_screen.dart';
+import 'package:rhea_app/screens/ending_workout/ending_workout_screen.dart';
 import 'package:rhea_app/screens/exercise_detail/exercise_detail_screen.dart';
 import 'package:rhea_app/screens/stage/stage_screen.dart';
 import 'package:rhea_app/screens/stage_detail/stage_detail_screen.dart';
@@ -140,6 +141,14 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
               ),
               restorationId: 'video_player',
             ),
+        '/dashboard/stage_detail/:stageId/ending_workout': (route) =>
+            MaterialPage<Widget>(
+              key: const ValueKey('ending_workout'),
+              child: EndingWorkoutScreen(
+                stageId: route.pathParameters['stageId'] ?? '',
+              ),
+              restorationId: 'ending_workout',
+            ),
         '/dashboard/stage_detail/:stageId/exercise_detail': (route) =>
             MaterialPage<Widget>(
               key: const ValueKey('exercise_detail'),
@@ -255,6 +264,14 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
                 preview: false,
               ),
               restorationId: 'video_player',
+            ),
+        '/dashboard/stage_detail/:stageId/ending_workout': (route) =>
+            CupertinoPage<Widget>(
+              key: const ValueKey('ending_workout'),
+              child: EndingWorkoutScreen(
+                stageId: route.pathParameters['stageId'] ?? '',
+              ),
+              restorationId: 'ending_workout',
             ),
         '/dashboard/stage_detail/:stageId/exercise_detail': (route) =>
             CupertinoPage<Widget>(
@@ -398,6 +415,14 @@ RouteMap _authenticatedRoutes(BuildContext context) {
               ),
               restorationId: 'video_player',
             ),
+        '/dashboard/stage_detail/:stageId/ending_workout': (route) =>
+            MaterialPage<Widget>(
+              key: const ValueKey('ending_workout'),
+              child: EndingWorkoutScreen(
+                stageId: route.pathParameters['stageId'] ?? '',
+              ),
+              restorationId: 'ending_workout',
+            ),
         '/dashboard/stage_detail/:stageId/exercise_detail': (route) =>
             MaterialPage<Widget>(
               key: const ValueKey('exercise_detail'),
@@ -488,6 +513,14 @@ RouteMap _authenticatedRoutes(BuildContext context) {
                 preview: false,
               ),
               restorationId: 'video_player',
+            ),
+        '/dashboard/stage_detail/:stageId/ending_workout': (route) =>
+            CupertinoPage<Widget>(
+              key: const ValueKey('ending_workout'),
+              child: EndingWorkoutScreen(
+                stageId: route.pathParameters['stageId'] ?? '',
+              ),
+              restorationId: 'ending_workout',
             ),
         '/dashboard/stage_detail/:stageId/exercise_detail': (route) =>
             CupertinoPage<Widget>(

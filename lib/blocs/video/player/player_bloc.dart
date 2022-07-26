@@ -324,7 +324,19 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         ),
       ],
     );
-    if (result != null && result) await routemasterDelegate.pop();
+    if (result != null && result) {
+      final chunkedPath = routemasterDelegate.currentConfiguration!.path
+          .split('/')
+          .take(
+            routemasterDelegate.currentConfiguration!.publicPath
+                    .split('/')
+                    .length -
+                1,
+          )
+          .join('/');
+      routemasterDelegate.replace('$chunkedPath/ending_workout');
+      return;
+    }
     await controller?.play();
   }
 

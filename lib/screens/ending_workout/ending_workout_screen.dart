@@ -95,11 +95,6 @@ class _EndingWorkoutScreen extends StatelessWidget {
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             reverseDuration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, animation) => AnimatedScale(
-              duration: const Duration(milliseconds: 300),
-              scale: animation.value,
-              child: child,
-            ),
             child: context.watch<EndingWorkoutCubit>().state.isNotEmpty
                 ? SolidButton(
                     background: turquoise,
@@ -121,7 +116,7 @@ class _EndingWorkoutScreen extends StatelessWidget {
                           ),
                         ),
                   )
-                : const SizedBox.shrink(),
+                : const SizedBox(),
           ),
           const Spacer(),
         ],

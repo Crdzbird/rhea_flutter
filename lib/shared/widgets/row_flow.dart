@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rhea_app/l10n/l10n.dart';
 
 import 'package:rhea_app/styles/color.dart';
 
@@ -21,8 +22,8 @@ class RowFlow<T> extends StatelessWidget {
         spacing: spacing,
         runSpacing: runSpacing,
         children: [
-          ...items.map(
-            (e) => Chip(
+          if (items.isEmpty)
+            Chip(
               label: Padding(
                 padding: const EdgeInsetsDirectional.only(
                   start: 30,
@@ -31,7 +32,7 @@ class RowFlow<T> extends StatelessWidget {
                   bottom: 15,
                 ),
                 child: Text(
-                  '$e',
+                  context.l10n.none,
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: biscay,
                         fontWeight: FontWeight.w600,
@@ -39,8 +40,28 @@ class RowFlow<T> extends StatelessWidget {
                 ),
               ),
               backgroundColor: albescentWhiteOpacity,
-            ),
-          )
+            )
+          else
+            ...items.map(
+              (e) => Chip(
+                label: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 30,
+                    end: 30,
+                    top: 15,
+                    bottom: 15,
+                  ),
+                  child: Text(
+                    '$e',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: biscay,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ),
+                backgroundColor: albescentWhiteOpacity,
+              ),
+            )
         ],
       );
 }

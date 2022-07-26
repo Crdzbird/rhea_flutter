@@ -16,23 +16,16 @@ class EndWorkoutBloc extends Bloc<EndWorkoutEvent, EndWorkoutState> {
   EndWorkoutBloc({
     required this.endWorkoutImplementation,
   }) : super(OnIdleEndWorkout()) {
-    on<OnFailureEvent>(
-      (event, emit) => emit(OnFailedEndWorkout(event.error)),
-    );
-    on<OnIdleEvent>(
-      (event, emit) => emit(OnIdleEndWorkout()),
-    );
-    on<OnSuccessEvent>(
-      (event, emit) => emit(const OnSuccessEndWorkout()),
-    );
-    on<OnLoadingEvent>(
-      (event, emit) => emit(OnLoadingEndWorkout()),
-    );
+    on<OnFailureEvent>((event, emit) => emit(OnFailedEndWorkout(event.error)));
+    on<OnIdleEvent>((event, emit) => emit(OnIdleEndWorkout()));
+    on<OnSuccessEvent>((event, emit) => emit(const OnSuccessEndWorkout()));
+    on<OnLoadingEvent>((event, emit) => emit(OnLoadingEndWorkout()));
   }
 
   final EndWorkoutImplementation endWorkoutImplementation;
 
   Future<void> endWorkout(String stage, ReasonType reasonType) async {
+    add(const OnLoadingEvent());
     final result = await endWorkoutImplementation.endWorkout(
       stage,
       Reason(reason: reasonType),
@@ -46,7 +39,9 @@ class EndWorkoutBloc extends Bloc<EndWorkoutEvent, EndWorkoutState> {
           add(OnFailureEvent(error.toString()));
           return;
         }
+        add(OnFailureEvent(error.toString()));
       },
     );
+    add(const OnIdleEvent());
   }
 }

@@ -37,9 +37,8 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   DioHelper.init();
   CrontaskProvider.init();
   await SharedProvider.init();
-  FlutterError.onError = (details) {
-    log(details.exceptionAsString(), stackTrace: details.stack);
-  };
+  FlutterError.onError =
+      (details) => log(details.exceptionAsString(), stackTrace: details.stack);
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
         ? HydratedStorage.webStorageDirectory

@@ -9,9 +9,8 @@ class BottomNavigationState extends Equatable {
   @override
   List<Object?> get props => [index];
 
-  BottomNavigationState copyWith({int? index}) {
-    return BottomNavigationState(index: index ?? this.index);
-  }
+  BottomNavigationState copyWith({int? index}) =>
+      BottomNavigationState(index: index ?? this.index);
 
   @override
   String toString() => 'BottomnavigationState(index: $index)';

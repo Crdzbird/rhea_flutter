@@ -4,9 +4,13 @@ import 'dart:collection';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:rhea_app/extensions/exercise_extension.dart';
 import 'package:rhea_app/l10n/l10n.dart';
+import 'package:rhea_app/models/enums/exercise_type.dart';
 import 'package:rhea_app/models/exercise.dart';
 import 'package:rhea_app/navigation/routes.dart';
+import 'package:rhea_app/screens/videoplayer/widgets/circle_timer.dart';
+import 'package:rhea_app/screens/videoplayer/widgets/main_timer.dart';
 import 'package:rhea_app/shared/widgets/dialog/rhea_dialog.dart';
 import 'package:rhea_app/shared/widgets/solid_button.dart';
 import 'package:rhea_app/styles/color.dart';
@@ -18,6 +22,7 @@ part 'player_state.dart';
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   PlayerBloc({
     required this.exercises,
+    required this.preview,
   }) : super(VideoInitState()) {
     on<VideoInitializeEvent>(_videoPlayerInit);
     on<VideoPlayEvent>(_videoPlayerPlay);
@@ -31,6 +36,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
   final List<Exercise> exercises;
   Exercise? _exercise;
+  final bool preview;
   Exercise get exercise => _exercise ?? const Exercise();
   Duration _totalDuration = Duration.zero;
   Duration _fixedDuration = Duration.zero;
@@ -65,7 +71,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     );
     _controller?.addListener(checkVideo);
 
-    _controller!.initialize();
+    _controller?.initialize();
     var _seconds = 0;
     var _fixedSeconds = 0;
     var _passedSeconds = 0;
@@ -170,7 +176,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         _controller!.value.isInitialized &&
         _controller?.value.position == _controller?.value.duration) {
       _isVideoFinished = true;
-      if (_position + 1 < exercises.length) {
+      if (_position + 1 < exercises.length && !preview) {
         _position++;
         init();
         play();
@@ -181,6 +187,20 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         add(VideoPlayCompletedEvent());
       }
     }
+  }
+
+  Widget switchComponents(BuildContext context) {
+    if (exercise.toExerciseType == ExerciseType.rest) {
+      return const Center(
+        child: CircleTimer(),
+      );
+    }
+    return AnimatedPositioned(
+      top: 15,
+      left: 20,
+      duration: const Duration(milliseconds: 350),
+      child: MainTimer(preview: preview),
+    );
   }
 
   Future<void> displayInformation() async => showRheaDialog(
@@ -343,6 +363,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   @override
   Future<void> close() {
     controller?.dispose();
+    seekDequeBuffer.clear();
     return super.close();
   }
 }

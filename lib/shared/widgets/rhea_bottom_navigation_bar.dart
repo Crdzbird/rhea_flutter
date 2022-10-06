@@ -18,7 +18,8 @@ class RheaBottomNavigationBar extends StatelessWidget {
         PlatformType.android) {
       return BottomNavigationBar(
         items: items,
-        currentIndex: context.read<BottomNavigationCubit>().state.index,
+        currentIndex: context
+            .select<BottomNavigationCubit, int>((value) => value.state.index),
         selectedItemColor: black,
         unselectedItemColor: linkWater,
         elevation: 0,
@@ -30,7 +31,8 @@ class RheaBottomNavigationBar extends StatelessWidget {
       items: items,
       activeColor: black,
       inactiveColor: linkWater,
-      currentIndex: context.read<BottomNavigationCubit>().state.index,
+      currentIndex: context
+          .select<BottomNavigationCubit, int>((value) => value.state.index),
       onTap: (index) =>
           context.read<BottomNavigationCubit>().onIndexChanging(index),
     );

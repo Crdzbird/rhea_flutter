@@ -19,25 +19,18 @@ class DashboardScreen extends StatelessWidget {
       builder: (context, state) {
         if (context.read<PlatformCubit>().state.platformType ==
             PlatformType.android) {
-          final tabPage = TabPage.of(context);
+          final tabPage = IndexedPage.of(context);
           return Scaffold(
-            body: TabBarView(
-              controller: tabPage.controller,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                for (final stack in tabPage.stacks)
-                  PageStackNavigator(stack: stack),
-              ],
+            body: PageStackNavigator(
+              stack: tabPage.stacks[state.index],
+              key: ValueKey(state.index),
             ),
             bottomNavigationBar: RheaBottomNavigationBar(
               items: [
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
                     'assets/svg/ic_stage.svg',
-                    color:
-                        context.read<BottomNavigationCubit>().state.index == 0
-                            ? turquoise
-                            : linkWater,
+                    color: tabPage.index == 0 ? turquoise : linkWater,
                   ),
                   label: l10n.stage,
                   tooltip: l10n.stage,
@@ -45,10 +38,7 @@ class DashboardScreen extends StatelessWidget {
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
                     'assets/svg/ic_settings.svg',
-                    color:
-                        context.read<BottomNavigationCubit>().state.index == 1
-                            ? turquoise
-                            : linkWater,
+                    color: tabPage.index == 1 ? turquoise : linkWater,
                   ),
                   label: l10n.settings,
                   tooltip: l10n.settings,

@@ -94,7 +94,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
           );
         },
         '/dashboard': (routeData) {
-          return TabPage(
+          return IndexedPage(
             child: BlocProvider(
               create: (context) => BottomNavigationCubit(),
               child: const DashboardScreen(),
@@ -242,11 +242,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
             ),
         '/dashboard/settings': (route) => const CupertinoPage<Widget>(
               key: ValueKey('settings'),
-              child: Scaffold(
-                body: Center(
-                  child: Text('Settings'),
-                ),
-              ),
+              child: TrialScreen(),
               restorationId: 'settings',
             ),
         '/dashboard/stage_detail/:stageId': (route) => CupertinoPage<Widget>(
@@ -331,7 +327,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
         );
       },
       '/dashboard': (routeData) {
-        return const TabPage(
+        return const IndexedPage(
           child: DashboardScreen(),
           paths: ['stage', 'settings'],
         );
@@ -368,7 +364,7 @@ RouteMap _authenticatedRoutes(BuildContext context) {
           );
         },
         '/dashboard': (routeData) {
-          return TabPage(
+          return IndexedPage(
             child: BlocProvider(
               create: (context) => BottomNavigationCubit(),
               child: const DashboardScreen(),
@@ -555,7 +551,7 @@ RouteMap _authenticatedRoutes(BuildContext context) {
         );
       },
       '/dashboard': (routeData) {
-        return const TabPage(
+        return const IndexedPage(
           child: DashboardScreen(),
           paths: ['stage', 'settings'],
         );

@@ -27,7 +27,7 @@ class AuthenticateImplementation extends AuthenticateAbstract {
 
   @override
   Future<void> signOut(String url) async {
-    await HydratedBlocOverrides.current?.storage.clear();
+    await HydratedBloc.storage.clear();
     await routemasterDelegate.popUntil((routeData) => routeData.path == '/');
   }
 }

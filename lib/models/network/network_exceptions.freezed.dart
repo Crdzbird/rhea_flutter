@@ -3922,7 +3922,7 @@ class _$DefaultError implements DefaultError {
 abstract class DefaultError implements NetworkExceptions {
   const factory DefaultError(final String error) = _$DefaultError;
 
-  String get error => throw _privateConstructorUsedError;
+  String get error;
   @JsonKey(ignore: true)
   _$$DefaultErrorCopyWith<_$DefaultError> get copyWith =>
       throw _privateConstructorUsedError;

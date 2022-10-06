@@ -5,6 +5,7 @@ part 'bottom_navigation_state.dart';
 
 class BottomNavigationCubit extends Cubit<BottomNavigationState> {
   BottomNavigationCubit() : super(BottomNavigationState.initial());
-
-  void onIndexChanging(int index) => emit(BottomNavigationState(index: index));
+  void onIndexChanging(int index) {
+    emit(BottomNavigationState(index: index));
+  }
 }

@@ -105,23 +105,15 @@ class __$$SuccessCopyWithImpl<T, $Res> extends _$ApiResultCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$Success<T> with DiagnosticableTreeMixin implements Success<T> {
+class _$Success<T> implements Success<T> {
   const _$Success({required this.data});
 
   @override
   final T data;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'ApiResult<$T>.success(data: $data)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'ApiResult<$T>.success'))
-      ..add(DiagnosticsProperty('data', data));
   }
 
   @override
@@ -207,7 +199,7 @@ class _$Success<T> with DiagnosticableTreeMixin implements Success<T> {
 abstract class Success<T> implements ApiResult<T> {
   const factory Success({required final T data}) = _$Success<T>;
 
-  T get data => throw _privateConstructorUsedError;
+  T get data;
   @JsonKey(ignore: true)
   _$$SuccessCopyWith<T, _$Success<T>> get copyWith =>
       throw _privateConstructorUsedError;
@@ -260,7 +252,7 @@ class __$$FailureCopyWithImpl<T, $Res> extends _$ApiResultCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$Failure<T> with DiagnosticableTreeMixin implements Failure<T> {
+class _$Failure<T> implements Failure<T> {
   const _$Failure({required this.error, this.message});
 
   @override
@@ -269,17 +261,8 @@ class _$Failure<T> with DiagnosticableTreeMixin implements Failure<T> {
   final String? message;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'ApiResult<$T>.failure(error: $error, message: $message)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'ApiResult<$T>.failure'))
-      ..add(DiagnosticsProperty('error', error))
-      ..add(DiagnosticsProperty('message', message));
   }
 
   @override
@@ -370,8 +353,8 @@ abstract class Failure<T> implements ApiResult<T> {
       {required final NetworkExceptions error,
       final String? message}) = _$Failure<T>;
 
-  NetworkExceptions get error => throw _privateConstructorUsedError;
-  String? get message => throw _privateConstructorUsedError;
+  NetworkExceptions get error;
+  String? get message;
   @JsonKey(ignore: true)
   _$$FailureCopyWith<T, _$Failure<T>> get copyWith =>
       throw _privateConstructorUsedError;

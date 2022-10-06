@@ -8,6 +8,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -32,14 +33,17 @@ class AppBlocObserver extends BlocObserver {
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = AppBlocObserver();
   DioHelper.init();
   CrontaskProvider.init();
   await SharedProvider.init();
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
-  final storage = await HydratedStorage.build(
-    storageDirectory: await getTemporaryDirectory(),
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: kIsWeb
+        ? HydratedStorage.webStorageDirectory
+        : await getTemporaryDirectory(),
   );
   await runZonedGuarded(
     () async {
@@ -47,11 +51,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
-      await HydratedBlocOverrides.runZoned(
-        () async => runApp(await builder()),
-        blocObserver: AppBlocObserver(),
-        storage: storage,
-      );
+      runApp(await builder());
     },
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
   );

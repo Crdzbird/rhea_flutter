@@ -163,6 +163,14 @@ class WorkSession extends Equatable {
     );
   }
 
+  static List<WorkSession> fromJsonList(List<String>? jsonList) =>
+      (jsonList == null || jsonList.isEmpty)
+          ? []
+          : jsonList.map(WorkSession.fromJson).toList();
+
+  static List<String> toJsonList(List<WorkSession> data) =>
+      data.map((e) => e.toJson).toList();
+
   @override
   String toString() {
     return 'WorkSession(id: $id, brief: $brief, completedTime: $completedTime, created: $created, description: $description, duration: $duration, feeling: $feeling, motivationalText: $motivationalText, name: $name, no: $no, sessionType: $sessionType, equipments: $equipments, sleepQuestions: $sleepQuestions, targetHeartRate: $targetHeartRate, totalDuration: $totalDuration, userId: $userId, videoSections: $videoSections)';

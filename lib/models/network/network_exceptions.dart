@@ -33,87 +33,62 @@ class NetworkExceptions with _$NetworkExceptions {
   factory NetworkExceptions.getDioException(dynamic error) {
     if (error is Exception) {
       try {
-        NetworkExceptions networkExceptions;
         if (error is DioError) {
           switch (error.type) {
             case DioErrorType.cancel:
-              networkExceptions = const NetworkExceptions.requestCancelled();
-              break;
+              return const NetworkExceptions.requestCancelled();
             case DioErrorType.connectTimeout:
-              networkExceptions = const NetworkExceptions.requestTimeout();
-              break;
+              return const NetworkExceptions.requestTimeout();
             case DioErrorType.other:
-              networkExceptions =
-                  const NetworkExceptions.noInternetConnection();
-              break;
+              return const NetworkExceptions.noInternetConnection();
             case DioErrorType.receiveTimeout:
-              networkExceptions = const NetworkExceptions.sendTimeout();
-              break;
+              return const NetworkExceptions.sendTimeout();
             case DioErrorType.response:
               switch (error.response!.statusCode) {
                 case badRequest:
-                  networkExceptions = const NetworkExceptions.badRequest();
-                  break;
+                  return const NetworkExceptions.badRequest();
                 case unauthorized:
-                  networkExceptions =
-                      const NetworkExceptions.unauthorizedRequest();
-                  break;
+                  return const NetworkExceptions.unauthorizedRequest();
                 case methodNotAllowed:
-                  networkExceptions =
-                      const NetworkExceptions.methodNotAllowed();
-                  break;
+                  return const NetworkExceptions.methodNotAllowed();
                 case forbidden:
-                  networkExceptions = const NetworkExceptions.forbidden();
-                  break;
+                  return const NetworkExceptions.forbidden();
                 case notFound:
-                  networkExceptions = const NetworkExceptions.notFound();
-                  break;
+                  return const NetworkExceptions.notFound();
                 case requestTimeout:
-                  networkExceptions = const NetworkExceptions.requestTimeout();
-                  break;
+                  return const NetworkExceptions.requestTimeout();
                 case conflict:
-                  networkExceptions = const NetworkExceptions.conflict();
-                  break;
+                  return const NetworkExceptions.conflict();
                 case internalServerError:
-                  networkExceptions =
-                      const NetworkExceptions.internalServerError();
-                  break;
+                  return const NetworkExceptions.internalServerError();
                 case badGateway:
-                  networkExceptions = const NetworkExceptions.badGateway();
-                  break;
+                  return const NetworkExceptions.badGateway();
                 case serviceUnavailable:
-                  networkExceptions =
-                      const NetworkExceptions.serviceUnavailable();
-                  break;
+                  return const NetworkExceptions.serviceUnavailable();
                 default:
                   final responseCode = error.response!.statusCode;
-                  networkExceptions = NetworkExceptions.defaultError(
+                  return NetworkExceptions.defaultError(
                     'Received invalid status code: $responseCode',
                   );
               }
-              break;
             case DioErrorType.sendTimeout:
-              networkExceptions = const NetworkExceptions.sendTimeout();
-              break;
+              return const NetworkExceptions.sendTimeout();
           }
-        } else if (error is SocketException) {
-          networkExceptions = const NetworkExceptions.noInternetConnection();
-        } else {
-          networkExceptions = const NetworkExceptions.unexpectedError();
         }
-        return networkExceptions;
+        if (error is SocketException) {
+          return const NetworkExceptions.noInternetConnection();
+        }
+        return const NetworkExceptions.unexpectedError();
       } on FormatException catch (_) {
         return const NetworkExceptions.formatException();
       } catch (_) {
         return const NetworkExceptions.unexpectedError();
       }
-    } else {
-      if (error.toString().contains('is not a subtype of')) {
-        return const NetworkExceptions.unableToProcess();
-      } else {
-        return const NetworkExceptions.unexpectedError();
-      }
     }
+    if (error.toString().contains('is not a subtype of')) {
+      return const NetworkExceptions.unableToProcess();
+    }
+    return const NetworkExceptions.unexpectedError();
   }
 
   static String? getError(dynamic err) {
@@ -121,9 +96,8 @@ class NetworkExceptions with _$NetworkExceptions {
       if (err.response?.data is Map<String, dynamic>) {
         // ignore: avoid_dynamic_calls
         return '${err.response?.data['message']}'.trim();
-      } else {
-        return err.response?.data?.toString().trim();
       }
+      return err.response?.data?.toString().trim();
     }
     return null;
   }

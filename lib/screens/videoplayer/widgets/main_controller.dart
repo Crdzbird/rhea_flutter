@@ -39,7 +39,8 @@ class MainController extends StatelessWidget {
                     children: [
                       if (!preview)
                         GestureDetector(
-                          onTap: () => context.read<PlayerBloc>().restart(),
+                          onTap: () =>
+                              context.read<PlayerBloc>().restart(context),
                           onLongPress: () =>
                               context.read<PlayerBloc>().previous(),
                           child: SvgPicture.asset(

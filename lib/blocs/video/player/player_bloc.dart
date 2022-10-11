@@ -40,7 +40,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   Exercise get exercise => _exercise ?? const Exercise();
   Duration _totalDuration = Duration.zero;
   Duration _fixedDuration = Duration.zero;
-  int _position = 46;
+  int _position = 0;
   int get position => _position;
   double _progress = 0;
   double get progress => _progress;
@@ -125,12 +125,12 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   void pause() =>
       add(VideoPauseEvent(currentDuration: _controller!.value.position));
 
-  void restart() {
+  void restart(BuildContext context) {
     if (_position + 1 < exercises.length) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            navigatorKey.currentContext!.l10n.long_press_back,
+            context.l10n.long_press_back,
             textAlign: TextAlign.center,
           ),
           margin: const EdgeInsetsDirectional.only(
@@ -204,7 +204,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   Future<void> displayInformation(BuildContext context) async => showRheaDialog(
-        navigatorKey.currentState!.context,
+        context,
         title: Text(
           exercise.name,
           style: Theme.of(context).textTheme.displayMedium?.copyWith(
@@ -221,10 +221,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
                 (e) => Flexible(
                   child: Text(
                     '$e\n',
-                    style: Theme.of(navigatorKey.currentContext!)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: biscay,
                           fontFamily: 'Polar',
                         ),

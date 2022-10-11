@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rhea_app/blocs/bottom_navigation/bottom_navigation_cubit.dart';
 import 'package:rhea_app/blocs/platform/platform_cubit.dart';
 import 'package:rhea_app/blocs/session/session_bloc.dart';
+import 'package:rhea_app/navigation/route_rhea.dart';
 import 'package:rhea_app/repositories/network/remote/data_source/authentication/implementation/authenticate_implementation.dart';
 import 'package:rhea_app/repositories/network/remote/data_source/plan/implementation/plan_implementation.dart';
 import 'package:rhea_app/repositories/network/remote/data_source/profile/implementation/profile_implementation.dart';
@@ -25,6 +26,7 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 final RoutemasterDelegate routemasterDelegate = RoutemasterDelegate(
   navigatorKey: navigatorKey,
+  observers: [RouteObserver()],
   routesBuilder: (context) {
     final sessionState = context.watch<SessionBloc>().state;
     if (sessionState.status == SessionState.unauthorized().status) {
@@ -53,7 +55,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
       PlatformType.android) {
     return RouteMap(
       routes: {
-        '/': (routeData) {
+        RouteRhea.authenticationScreen.path: (routeData) {
           return MaterialPage<Widget>(
             child: RepositoryProvider(
               create: (context) => AuthenticateImplementation(),
@@ -63,7 +65,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
             restorationId: 'authentication_page',
           );
         },
-        '/email': (routeData) {
+        RouteRhea.emailScreen.path: (routeData) {
           return MaterialPage<Widget>(
             child: MultiRepositoryProvider(
               providers: [
@@ -79,7 +81,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
             restorationId: 'email_page',
           );
         },
-        '/rheaWebView': (routeData) {
+        RouteRhea.webviewScreen.path: (routeData) {
           return MaterialPage<Widget>(
             child: RheaWebView(
               url: routeData.queryParameters['url'] ?? 'https://getrhea.com',
@@ -87,13 +89,13 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
             restorationId: 'webview_page',
           );
         },
-        '/trial': (routeData) {
+        RouteRhea.trialScreen.path: (routeData) {
           return const MaterialPage<Widget>(
             child: TrialScreen(),
             restorationId: 'trial_page',
           );
         },
-        '/dashboard': (routeData) {
+        RouteRhea.dashboardScreen.path: (routeData) {
           return IndexedPage(
             child: BlocProvider(
               create: (context) => BottomNavigationCubit(),
@@ -102,7 +104,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
             paths: const ['stage', 'settings'],
           );
         },
-        '/dashboard/stage': (route) => MaterialPage<Widget>(
+        RouteRhea.stageScreen.path: (route) => MaterialPage<Widget>(
               child: MultiRepositoryProvider(
                 providers: [
                   RepositoryProvider(
@@ -120,20 +122,19 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
               key: const ValueKey('stage'),
               restorationId: 'stage',
             ),
-        '/dashboard/settings': (route) => const MaterialPage<Widget>(
+        RouteRhea.settingsScreen.path: (route) => const MaterialPage<Widget>(
               key: ValueKey('settings'),
               child: TrialScreen(),
               restorationId: 'settings',
             ),
-        '/dashboard/stage_detail/:stageId': (route) => MaterialPage<Widget>(
+        RouteRhea.stageDetailScreen.path: (route) => MaterialPage<Widget>(
               key: const ValueKey('stage_detail'),
               child: StageDetailScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
               ),
               restorationId: 'stage_detail',
             ),
-        '/dashboard/stage_detail/:stageId/video_player': (route) =>
-            MaterialPage<Widget>(
+        RouteRhea.videoPlayerScreen.path: (route) => MaterialPage<Widget>(
               key: const ValueKey('video_player'),
               child: VideoPlayerScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
@@ -141,39 +142,37 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
               ),
               restorationId: 'video_player',
             ),
-        '/dashboard/stage_detail/:stageId/ending_workout': (route) =>
-            MaterialPage<Widget>(
+        RouteRhea.endingWorkoutScreen.path: (route) => MaterialPage<Widget>(
               key: const ValueKey('ending_workout'),
               child: EndingWorkoutScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
               ),
               restorationId: 'ending_workout',
             ),
-        '/dashboard/stage_detail/:stageId/exercise_detail': (route) =>
-            MaterialPage<Widget>(
+        RouteRhea.exerciseDetailScreen.path: (route) => MaterialPage<Widget>(
               key: const ValueKey('exercise_detail'),
               child: ExerciseDetailScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
               ),
               restorationId: 'exercise_detail',
             ),
-        '/dashboard/stage_detail/:stageId/exercise_detail/video_player_demonstration':
-            (route) => MaterialPage<Widget>(
-                  key: const ValueKey('video_player_demonstration'),
-                  child: VideoPlayerScreen(
-                    stageId: route.pathParameters['stageId'] ?? '',
-                    preview: true,
-                  ),
-                  restorationId: 'video_player_demonstration',
-                ),
+        RouteRhea.videoPlayerDemonstrationScreen.path: (route) =>
+            MaterialPage<Widget>(
+              key: const ValueKey('video_player_demonstration'),
+              child: VideoPlayerScreen(
+                stageId: route.pathParameters['stageId'] ?? '',
+                preview: true,
+              ),
+              restorationId: 'video_player_demonstration',
+            ),
       },
-      onUnknownRoute: (_) => const Redirect('/'),
+      onUnknownRoute: (_) => Redirect(RouteRhea.authenticationScreen.path),
     );
   }
   if (context.read<PlatformCubit>().state.platformType == PlatformType.iOS) {
     return RouteMap(
       routes: {
-        '/': (routeData) {
+        RouteRhea.authenticationScreen.path: (routeData) {
           return CupertinoPage<Widget>(
             child: RepositoryProvider(
               create: (context) => AuthenticateImplementation(),
@@ -183,7 +182,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
             restorationId: 'authentication_page',
           );
         },
-        '/email': (routeData) {
+        RouteRhea.emailScreen.path: (routeData) {
           return CupertinoPage<Widget>(
             child: MultiRepositoryProvider(
               providers: [
@@ -199,7 +198,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
             restorationId: 'email_page',
           );
         },
-        '/rheaWebView': (routeData) {
+        RouteRhea.webviewScreen.path: (routeData) {
           return CupertinoPage<Widget>(
             child: RheaWebView(
               url: routeData.queryParameters['url'] ?? 'https://getrhea.com',
@@ -207,13 +206,13 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
             restorationId: 'webview_page',
           );
         },
-        '/trial': (routeData) {
+        RouteRhea.trialScreen.path: (routeData) {
           return const CupertinoPage<Widget>(
             child: TrialScreen(),
             restorationId: 'trial_page',
           );
         },
-        '/dashboard': (routeData) {
+        RouteRhea.dashboardScreen.path: (routeData) {
           return CupertinoTabPage(
             child: BlocProvider(
               create: (context) => BottomNavigationCubit(),
@@ -222,7 +221,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
             paths: const ['stage', 'settings'],
           );
         },
-        '/dashboard/stage': (route) => CupertinoPage<Widget>(
+        RouteRhea.stageScreen.path: (route) => CupertinoPage<Widget>(
               child: MultiRepositoryProvider(
                 providers: [
                   RepositoryProvider(
@@ -240,20 +239,19 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
               key: const ValueKey('stage'),
               restorationId: 'stage',
             ),
-        '/dashboard/settings': (route) => const CupertinoPage<Widget>(
+        RouteRhea.settingsScreen.path: (route) => const CupertinoPage<Widget>(
               key: ValueKey('settings'),
               child: TrialScreen(),
               restorationId: 'settings',
             ),
-        '/dashboard/stage_detail/:stageId': (route) => CupertinoPage<Widget>(
+        RouteRhea.stageDetailScreen.path: (route) => CupertinoPage<Widget>(
               key: const ValueKey('stage_detail'),
               child: StageDetailScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
               ),
               restorationId: 'stage_detail',
             ),
-        '/dashboard/stage_detail/:stageId/video_player': (route) =>
-            CupertinoPage<Widget>(
+        RouteRhea.videoPlayerScreen.path: (route) => CupertinoPage<Widget>(
               key: const ValueKey('video_player'),
               child: VideoPlayerScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
@@ -261,38 +259,36 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
               ),
               restorationId: 'video_player',
             ),
-        '/dashboard/stage_detail/:stageId/ending_workout': (route) =>
-            CupertinoPage<Widget>(
+        RouteRhea.endingWorkoutScreen.path: (route) => CupertinoPage<Widget>(
               key: const ValueKey('ending_workout'),
               child: EndingWorkoutScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
               ),
               restorationId: 'ending_workout',
             ),
-        '/dashboard/stage_detail/:stageId/exercise_detail': (route) =>
-            CupertinoPage<Widget>(
+        RouteRhea.exerciseDetailScreen.path: (route) => CupertinoPage<Widget>(
               key: const ValueKey('exercise_detail'),
               child: ExerciseDetailScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
               ),
               restorationId: 'exercise_detail',
             ),
-        '/dashboard/stage_detail/:stageId/exercise_detail/video_player_demonstration':
-            (route) => CupertinoPage<Widget>(
-                  key: const ValueKey('video_player_demonstration'),
-                  child: VideoPlayerScreen(
-                    stageId: route.pathParameters['stageId'] ?? '',
-                    preview: true,
-                  ),
-                  restorationId: 'video_player_demonstration',
-                ),
+        RouteRhea.videoPlayerDemonstrationScreen.path: (route) =>
+            CupertinoPage<Widget>(
+              key: const ValueKey('video_player_demonstration'),
+              child: VideoPlayerScreen(
+                stageId: route.pathParameters['stageId'] ?? '',
+                preview: true,
+              ),
+              restorationId: 'video_player_demonstration',
+            ),
       },
-      onUnknownRoute: (_) => const Redirect('/'),
+      onUnknownRoute: (_) => Redirect(RouteRhea.authenticationScreen.path),
     );
   }
   return RouteMap(
     routes: {
-      '/': (routeData) {
+      RouteRhea.authenticationScreen.path: (routeData) {
         return MaterialPage<Widget>(
           child: RepositoryProvider(
             create: (context) => AuthenticateImplementation(),
@@ -302,7 +298,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
           restorationId: 'authentication_page',
         );
       },
-      '/email': (routeData) {
+      RouteRhea.emailScreen.path: (routeData) {
         return MaterialPage<Widget>(
           child: MultiRepositoryProvider(
             providers: [
@@ -318,7 +314,7 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
           restorationId: 'email_page',
         );
       },
-      '/rheaWebView': (routeData) {
+      RouteRhea.webviewScreen.path: (routeData) {
         return MaterialPage<Widget>(
           child: RheaWebView(
             url: routeData.queryParameters['url'] ?? 'https://getrhea.com',
@@ -326,20 +322,20 @@ RouteMap _unauthenticatedRoutes(BuildContext context) {
           restorationId: 'webview_page',
         );
       },
-      '/dashboard': (routeData) {
+      RouteRhea.dashboardScreen.path: (routeData) {
         return const IndexedPage(
           child: DashboardScreen(),
           paths: ['stage', 'settings'],
         );
       },
-      '/trial': (routeData) {
+      RouteRhea.trialScreen.path: (routeData) {
         return const MaterialPage<Widget>(
           child: TrialScreen(),
           restorationId: 'trial_page',
         );
       },
     },
-    onUnknownRoute: (_) => const Redirect('/'),
+    onUnknownRoute: (_) => Redirect(RouteRhea.authenticationScreen.path),
   );
 }
 
@@ -348,8 +344,9 @@ RouteMap _authenticatedRoutes(BuildContext context) {
       PlatformType.android) {
     return RouteMap(
       routes: {
-        '/': (routeData) => const Redirect('/dashboard'),
-        '/rheaWebView': (routeData) {
+        RouteRhea.authenticationScreen.path: (routeData) =>
+            Redirect(RouteRhea.dashboardScreen.path),
+        RouteRhea.webviewScreen.path: (routeData) {
           return MaterialPage<Widget>(
             child: RheaWebView(
               url: routeData.queryParameters['url'] ?? 'https://getrhea.com',
@@ -357,13 +354,13 @@ RouteMap _authenticatedRoutes(BuildContext context) {
             restorationId: 'webview_page',
           );
         },
-        '/trial': (routeData) {
+        RouteRhea.trialScreen.path: (routeData) {
           return const MaterialPage<Widget>(
             child: TrialScreen(),
             restorationId: 'trial_page',
           );
         },
-        '/dashboard': (routeData) {
+        RouteRhea.dashboardScreen.path: (routeData) {
           return IndexedPage(
             child: BlocProvider(
               create: (context) => BottomNavigationCubit(),
@@ -372,7 +369,7 @@ RouteMap _authenticatedRoutes(BuildContext context) {
             paths: const ['stage', 'settings'],
           );
         },
-        '/dashboard/stage': (route) => MaterialPage<Widget>(
+        RouteRhea.stageScreen.path: (route) => MaterialPage<Widget>(
               child: MultiRepositoryProvider(
                 providers: [
                   RepositoryProvider(
@@ -390,20 +387,19 @@ RouteMap _authenticatedRoutes(BuildContext context) {
               key: const ValueKey('stage'),
               restorationId: 'stage',
             ),
-        '/dashboard/settings': (route) => const MaterialPage<Widget>(
+        RouteRhea.settingsScreen.path: (route) => const MaterialPage<Widget>(
               key: ValueKey('settings'),
               child: TrialScreen(),
               restorationId: 'settings',
             ),
-        '/dashboard/stage_detail/:stageId': (route) => MaterialPage<Widget>(
+        RouteRhea.stageDetailScreen.path: (route) => MaterialPage<Widget>(
               key: const ValueKey('stage_detail'),
               child: StageDetailScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
               ),
               restorationId: 'stage_detail',
             ),
-        '/dashboard/stage_detail/:stageId/video_player': (route) =>
-            MaterialPage<Widget>(
+        RouteRhea.videoPlayerScreen.path: (route) => MaterialPage<Widget>(
               key: const ValueKey('video_player'),
               child: VideoPlayerScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
@@ -411,40 +407,39 @@ RouteMap _authenticatedRoutes(BuildContext context) {
               ),
               restorationId: 'video_player',
             ),
-        '/dashboard/stage_detail/:stageId/ending_workout': (route) =>
-            MaterialPage<Widget>(
+        RouteRhea.endingWorkoutScreen.path: (route) => MaterialPage<Widget>(
               key: const ValueKey('ending_workout'),
               child: EndingWorkoutScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
               ),
               restorationId: 'ending_workout',
             ),
-        '/dashboard/stage_detail/:stageId/exercise_detail': (route) =>
-            MaterialPage<Widget>(
+        RouteRhea.exerciseDetailScreen.path: (route) => MaterialPage<Widget>(
               key: const ValueKey('exercise_detail'),
               child: ExerciseDetailScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
               ),
               restorationId: 'exercise_detail',
             ),
-        '/dashboard/stage_detail/:stageId/exercise_detail/video_player_demonstration':
-            (route) => MaterialPage<Widget>(
-                  key: const ValueKey('video_player_demonstration'),
-                  child: VideoPlayerScreen(
-                    stageId: route.pathParameters['stageId'] ?? '',
-                    preview: true,
-                  ),
-                  restorationId: 'video_player_demonstration',
-                ),
+        RouteRhea.videoPlayerDemonstrationScreen.path: (route) =>
+            MaterialPage<Widget>(
+              key: const ValueKey('video_player_demonstration'),
+              child: VideoPlayerScreen(
+                stageId: route.pathParameters['stageId'] ?? '',
+                preview: true,
+              ),
+              restorationId: 'video_player_demonstration',
+            ),
       },
-      onUnknownRoute: (_) => const Redirect('/'),
+      onUnknownRoute: (_) => Redirect(RouteRhea.authenticationScreen.path),
     );
   }
   if (context.read<PlatformCubit>().state.platformType == PlatformType.iOS) {
     return RouteMap(
       routes: {
-        '/': (routeData) => const Redirect('/dashboard'),
-        '/rheaWebView': (routeData) {
+        RouteRhea.authenticationScreen.path: (routeData) =>
+            Redirect(RouteRhea.dashboardScreen.path),
+        RouteRhea.webviewScreen.path: (routeData) {
           return CupertinoPage<Widget>(
             child: RheaWebView(
               url: routeData.queryParameters['url'] ?? 'https://getrhea.com',
@@ -452,13 +447,13 @@ RouteMap _authenticatedRoutes(BuildContext context) {
             restorationId: 'webview_page',
           );
         },
-        '/trial': (routeData) {
+        RouteRhea.trialScreen.path: (routeData) {
           return const CupertinoPage<Widget>(
             child: TrialScreen(),
             restorationId: 'trial_page',
           );
         },
-        '/dashboard': (routeData) {
+        RouteRhea.dashboardScreen.path: (routeData) {
           return CupertinoTabPage(
             child: BlocProvider(
               create: (context) => BottomNavigationCubit(),
@@ -467,7 +462,7 @@ RouteMap _authenticatedRoutes(BuildContext context) {
             paths: const ['stage', 'settings'],
           );
         },
-        '/dashboard/stage': (route) => CupertinoPage<Widget>(
+        RouteRhea.stageScreen.path: (route) => CupertinoPage<Widget>(
               child: MultiRepositoryProvider(
                 providers: [
                   RepositoryProvider(
@@ -485,7 +480,7 @@ RouteMap _authenticatedRoutes(BuildContext context) {
               key: const ValueKey('stage'),
               restorationId: 'stage',
             ),
-        '/dashboard/settings': (route) => const CupertinoPage<Widget>(
+        RouteRhea.settingsScreen.path: (route) => const CupertinoPage<Widget>(
               key: ValueKey('settings'),
               child: Scaffold(
                 body: Center(
@@ -494,15 +489,14 @@ RouteMap _authenticatedRoutes(BuildContext context) {
               ),
               restorationId: 'settings',
             ),
-        '/dashboard/stage_detail/:stageId': (route) => CupertinoPage<Widget>(
+        RouteRhea.stageDetailScreen.path: (route) => CupertinoPage<Widget>(
               key: const ValueKey('stage_detail'),
               child: StageDetailScreen(
                 stageId: route.pathParameters['stageId'] ?? 'empty',
               ),
               restorationId: 'stage_detail',
             ),
-        '/dashboard/stage_detail/:stageId/video_player': (route) =>
-            CupertinoPage<Widget>(
+        RouteRhea.videoPlayerScreen.path: (route) => CupertinoPage<Widget>(
               key: const ValueKey('video_player'),
               child: VideoPlayerScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
@@ -510,39 +504,38 @@ RouteMap _authenticatedRoutes(BuildContext context) {
               ),
               restorationId: 'video_player',
             ),
-        '/dashboard/stage_detail/:stageId/ending_workout': (route) =>
-            CupertinoPage<Widget>(
+        RouteRhea.endingWorkoutScreen.path: (route) => CupertinoPage<Widget>(
               key: const ValueKey('ending_workout'),
               child: EndingWorkoutScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
               ),
               restorationId: 'ending_workout',
             ),
-        '/dashboard/stage_detail/:stageId/exercise_detail': (route) =>
-            CupertinoPage<Widget>(
+        RouteRhea.exerciseDetailScreen.path: (route) => CupertinoPage<Widget>(
               key: const ValueKey('exercise_detail'),
               child: ExerciseDetailScreen(
                 stageId: route.pathParameters['stageId'] ?? '',
               ),
               restorationId: 'exercise_detail',
             ),
-        '/dashboard/stage_detail/:stageId/exercise_detail/video_player_demonstration':
-            (route) => CupertinoPage<Widget>(
-                  key: const ValueKey('video_player_demonstration'),
-                  child: VideoPlayerScreen(
-                    stageId: route.pathParameters['stageId'] ?? '',
-                    preview: true,
-                  ),
-                  restorationId: 'video_player_demonstration',
-                ),
+        RouteRhea.videoPlayerDemonstrationScreen.path: (route) =>
+            CupertinoPage<Widget>(
+              key: const ValueKey('video_player_demonstration'),
+              child: VideoPlayerScreen(
+                stageId: route.pathParameters['stageId'] ?? '',
+                preview: true,
+              ),
+              restorationId: 'video_player_demonstration',
+            ),
       },
-      onUnknownRoute: (_) => const Redirect('/'),
+      onUnknownRoute: (_) => Redirect(RouteRhea.authenticationScreen.path),
     );
   }
   return RouteMap(
     routes: {
-      '/': (routeData) => const Redirect('/dashboard'),
-      '/rheaWebView': (routeData) {
+      RouteRhea.authenticationScreen.path: (routeData) =>
+          Redirect(RouteRhea.dashboardScreen.path),
+      RouteRhea.webviewScreen.path: (routeData) {
         return MaterialPage<Widget>(
           child: RheaWebView(
             url: routeData.queryParameters['url'] ?? 'https://getrhea.com',
@@ -550,20 +543,20 @@ RouteMap _authenticatedRoutes(BuildContext context) {
           restorationId: 'webview_page',
         );
       },
-      '/dashboard': (routeData) {
+      RouteRhea.dashboardScreen.path: (routeData) {
         return const IndexedPage(
           child: DashboardScreen(),
           paths: ['stage', 'settings'],
         );
       },
-      '/trial': (routeData) {
+      RouteRhea.trialScreen.path: (routeData) {
         return const MaterialPage<Widget>(
           child: TrialScreen(),
           restorationId: 'trial_page',
         );
       },
     },
-    onUnknownRoute: (_) => const Redirect('/'),
+    onUnknownRoute: (_) => Redirect(RouteRhea.authenticationScreen.path),
   );
 }
 
@@ -572,38 +565,38 @@ RouteMap _freeRoutes(BuildContext context) {
       PlatformType.android) {
     return RouteMap(
       routes: {
-        '/': (routeData) {
+        RouteRhea.authenticationScreen.path: (routeData) {
           return const MaterialPage<Widget>(
             child: TrialScreen(),
             restorationId: 'trial_page',
           );
         },
       },
-      onUnknownRoute: (_) => const Redirect('/'),
+      onUnknownRoute: (_) => Redirect(RouteRhea.authenticationScreen.path),
     );
   }
   if (context.read<PlatformCubit>().state.platformType == PlatformType.iOS) {
     return RouteMap(
       routes: {
-        '/': (routeData) {
+        RouteRhea.authenticationScreen.path: (routeData) {
           return const CupertinoPage<Widget>(
             child: TrialScreen(),
             restorationId: 'trial_page',
           );
         },
       },
-      onUnknownRoute: (_) => const Redirect('/'),
+      onUnknownRoute: (_) => Redirect(RouteRhea.authenticationScreen.path),
     );
   }
   return RouteMap(
     routes: {
-      '/': (routeData) {
+      RouteRhea.authenticationScreen.path: (routeData) {
         return const MaterialPage<Widget>(
           child: TrialScreen(),
           restorationId: 'trial_page',
         );
       },
     },
-    onUnknownRoute: (_) => const Redirect('/'),
+    onUnknownRoute: (_) => Redirect(RouteRhea.authenticationScreen.path),
   );
 }

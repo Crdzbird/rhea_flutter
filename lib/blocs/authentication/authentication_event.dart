@@ -8,8 +8,8 @@ abstract class AuthenticationEvent extends Equatable {
 }
 
 class OnAuthenticatedEvent extends AuthenticationEvent {
-  const OnAuthenticatedEvent(this.session);
-  final Session session;
+  const OnAuthenticatedEvent(this.profile);
+  final Profile profile;
 }
 
 class OnFailureEvent extends AuthenticationEvent {

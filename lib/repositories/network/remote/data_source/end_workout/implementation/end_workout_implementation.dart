@@ -29,7 +29,3 @@ class EndWorkoutImplementation extends EndWorkoutAbstract {
     }
   }
 }
-
-// BARCELONA: 19 AL 23 DE AGOSTO.
-// MALAGA Y GRANADA: 3 AL 6 DE SEPTIEMBRE.
-// VALENCIA: DIAS FINALES.

@@ -17,6 +17,6 @@ class OnFailedAuthentication extends AuthenticationState {
 }
 
 class OnSuccessAuthentication extends AuthenticationState {
-  const OnSuccessAuthentication(this.session);
-  final Session session;
+  const OnSuccessAuthentication(this.profile);
+  final Profile profile;
 }

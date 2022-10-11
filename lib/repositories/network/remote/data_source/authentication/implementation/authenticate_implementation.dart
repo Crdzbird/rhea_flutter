@@ -10,7 +10,7 @@ import 'package:rhea_app/utils/dart_define.dart';
 
 class AuthenticateImplementation extends AuthenticateAbstract {
   @override
-  Future<ApiResult<Session>> authenticate(Credentials credentials) async {
+  Future<ApiResult<dynamic>> authenticate(Credentials credentials) async {
     try {
       final response = await DioHelper.post(
         url: '${DartDefine.rheaUrl}public/authentication/authenticate',

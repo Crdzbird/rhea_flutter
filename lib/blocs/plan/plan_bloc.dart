@@ -11,21 +11,11 @@ part 'plan_state.dart';
 part 'plan_event.dart';
 
 class PlanBloc extends Bloc<PlanEvent, PlanState> {
-  PlanBloc({
-    required this.planImplementation,
-  }) : super(OnIdlePlan()) {
-    on<OnFailureEvent>(
-      (event, emit) => emit(OnFailedPlan(event.error)),
-    );
-    on<OnIdleEvent>(
-      (event, emit) => emit(OnIdlePlan()),
-    );
-    on<OnSuccessEvent>(
-      (event, emit) => emit(OnSuccessPlan(event.plan)),
-    );
-    on<OnLoadingEvent>(
-      (event, emit) => emit(OnLoadingPlan()),
-    );
+  PlanBloc({required this.planImplementation}) : super(OnIdlePlan()) {
+    on<OnFailureEvent>((event, emit) => emit(OnFailedPlan(event.error)));
+    on<OnIdleEvent>((event, emit) => emit(OnIdlePlan()));
+    on<OnSuccessEvent>((event, emit) => emit(OnSuccessPlan(event.plan)));
+    on<OnLoadingEvent>((event, emit) => emit(OnLoadingPlan()));
     fetchPlan();
   }
 

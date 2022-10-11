@@ -50,7 +50,10 @@ class SecondaryController extends StatelessWidget {
                             .toExerciseType ==
                         ExerciseType.rest
                     ? () => context.read<PlayerBloc>().next()
-                    : () => context.read<PlayerBloc>().showFinishWorkout(),
+                    : () {
+                        context.read<PlayerBloc>().pause();
+                        context.read<PlayerBloc>().showFinishWorkout(context);
+                      },
                 child: GlassContainer(
                   borderRadius: BorderRadius.circular(20),
                   shadowStrength: 2,

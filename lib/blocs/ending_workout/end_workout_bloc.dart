@@ -6,7 +6,6 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rhea_app/models/enums/reason_type.dart';
 import 'package:rhea_app/models/network/network_exceptions.dart';
 import 'package:rhea_app/models/reason.dart';
-import 'package:rhea_app/navigation/routes.dart';
 import 'package:rhea_app/repositories/network/remote/data_source/end_workout/implementation/end_workout_implementation.dart';
 
 part 'end_workout_event.dart';
@@ -30,11 +29,9 @@ class EndWorkoutBloc extends Bloc<EndWorkoutEvent, EndWorkoutState> {
       stage,
       Reason(reason: reasonType),
     );
-    await result.when(
-      success: (data) async {
-        await routemasterDelegate.pop();
-      },
-      failure: (error, _) async {
+    result.when(
+      success: (data) => add(const OnSuccessEvent()),
+      failure: (error, _) {
         if (NetworkExceptions.isUnauthorized(error)) {
           add(OnFailureEvent(error.toString()));
           return;
@@ -42,6 +39,5 @@ class EndWorkoutBloc extends Bloc<EndWorkoutEvent, EndWorkoutState> {
         add(OnFailureEvent(error.toString()));
       },
     );
-    add(const OnIdleEvent());
   }
 }

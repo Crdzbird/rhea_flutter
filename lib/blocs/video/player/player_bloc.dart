@@ -40,7 +40,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   Exercise get exercise => _exercise ?? const Exercise();
   Duration _totalDuration = Duration.zero;
   Duration _fixedDuration = Duration.zero;
-  int _position = 0;
+  int _position = 46;
   int get position => _position;
   double _progress = 0;
   double get progress => _progress;
@@ -106,7 +106,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     Emitter<PlayerState> emit,
   ) async {
     _controller?.removeListener(checkVideo);
-    await showCompleteWorkoutDialog();
+    emit(VideoFinishedState());
   }
 
   void _videoPlayerPlay(VideoPlayEvent event, Emitter<PlayerState> emit) {
@@ -203,20 +203,17 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     );
   }
 
-  Future<void> displayInformation() async => showRheaDialog(
+  Future<void> displayInformation(BuildContext context) async => showRheaDialog(
         navigatorKey.currentState!.context,
         title: Text(
           exercise.name,
-          style: Theme.of(navigatorKey.currentContext!)
-              .textTheme
-              .displayMedium
-              ?.copyWith(
+          style: Theme.of(context).textTheme.displayMedium?.copyWith(
                 color: biscay,
               ),
           textAlign: TextAlign.center,
         ),
         content: SizedBox(
-          height: MediaQuery.of(navigatorKey.currentContext!).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.5,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -241,51 +238,44 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         actions: <Widget>[const SizedBox.shrink()],
       );
 
-  Future<void> showCompleteWorkoutDialog() async {
+  Future<void> showCompleteWorkoutDialog(BuildContext context) async {
     final result = await showRheaDialog(
-      navigatorKey.currentState!.context,
+      context,
       dismissible: false,
       title: Text(
-        navigatorKey.currentContext!.l10n.exercise_completed,
-        style: Theme.of(navigatorKey.currentContext!)
-            .textTheme
-            .displayMedium
-            ?.copyWith(
+        context.l10n.exercise_completed,
+        style: Theme.of(context).textTheme.displayMedium?.copyWith(
               color: biscay,
             ),
         textAlign: TextAlign.center,
       ),
       content: Text(
-        navigatorKey.currentContext!.l10n.session_completed,
-        style: Theme.of(navigatorKey.currentContext!)
-            .textTheme
-            .bodySmall
-            ?.copyWith(
+        context.l10n.session_completed,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: biscay,
             ),
         textAlign: TextAlign.center,
       ),
       actions: <Widget>[
         SolidButton(
-          width: MediaQuery.of(navigatorKey.currentContext!).size.width * 0.3,
+          width: MediaQuery.of(context).size.width * 0.3,
           title: Text(
-            navigatorKey.currentContext!.l10n.go_again,
+            context.l10n.go_again,
             textAlign: TextAlign.center,
           ),
           borderRadius: 30,
           background: persimmom,
-          onPressed: () =>
-              Navigator.of(navigatorKey.currentContext!).pop(false),
+          onPressed: () => Navigator.of(context).pop(false),
         ),
         SolidButton(
-          width: MediaQuery.of(navigatorKey.currentContext!).size.width * 0.3,
+          width: MediaQuery.of(context).size.width * 0.3,
           title: Text(
-            navigatorKey.currentContext!.l10n.finish,
+            context.l10n.finish,
             textAlign: TextAlign.center,
           ),
           borderRadius: 30,
           background: turquoise,
-          onPressed: () => Navigator.of(navigatorKey.currentContext!).pop(true),
+          onPressed: () => Navigator.of(context).pop(true),
         ),
       ],
     );
@@ -295,52 +285,44 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     play();
   }
 
-  Future<void> showFinishWorkout() async {
-    await _controller?.pause();
+  Future<void> showFinishWorkout(BuildContext context) async {
     final result = await showRheaDialog(
-      navigatorKey.currentState!.context,
+      context,
       dismissible: false,
       title: Text(
-        navigatorKey.currentContext!.l10n.end_workout_question,
-        style: Theme.of(navigatorKey.currentContext!)
-            .textTheme
-            .displayMedium
-            ?.copyWith(
+        context.l10n.end_workout_question,
+        style: Theme.of(context).textTheme.displayMedium?.copyWith(
               color: biscay,
             ),
         textAlign: TextAlign.center,
       ),
       content: Text(
-        navigatorKey.currentContext!.l10n.end_workout_description,
-        style: Theme.of(navigatorKey.currentContext!)
-            .textTheme
-            .bodyMedium
-            ?.copyWith(
+        context.l10n.end_workout_description,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: biscay,
             ),
         textAlign: TextAlign.center,
       ),
       actions: <Widget>[
         SolidButton(
-          width: MediaQuery.of(navigatorKey.currentContext!).size.width * 0.3,
+          width: MediaQuery.of(context).size.width * 0.3,
           title: Text(
-            navigatorKey.currentContext!.l10n.no,
+            context.l10n.no,
             textAlign: TextAlign.center,
           ),
           borderRadius: 30,
           background: persimmom,
-          onPressed: () =>
-              Navigator.of(navigatorKey.currentContext!).pop(false),
+          onPressed: () => Navigator.of(context).pop(false),
         ),
         SolidButton(
-          width: MediaQuery.of(navigatorKey.currentContext!).size.width * 0.3,
+          width: MediaQuery.of(context).size.width * 0.3,
           title: Text(
-            navigatorKey.currentContext!.l10n.yes,
+            context.l10n.yes,
             textAlign: TextAlign.center,
           ),
           borderRadius: 30,
           background: turquoise,
-          onPressed: () => Navigator.of(navigatorKey.currentContext!).pop(true),
+          onPressed: () => Navigator.of(context).pop(true),
         ),
       ],
     );

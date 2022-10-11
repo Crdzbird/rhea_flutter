@@ -19,27 +19,13 @@ class PlatformCubit extends Cubit<PlatformState> {
   bool get isWeb => kIsWeb;
 
   TargetPlatform targetPlatform() {
-    if (kIsWeb) {
-      return TargetPlatform.macOS;
-    }
-    if (Platform.isMacOS) {
-      return TargetPlatform.macOS;
-    }
-    if (Platform.isFuchsia) {
-      return TargetPlatform.fuchsia;
-    }
-    if (Platform.isLinux) {
-      return TargetPlatform.linux;
-    }
-    if (Platform.isWindows) {
-      return TargetPlatform.windows;
-    }
-    if (Platform.isIOS) {
-      return TargetPlatform.iOS;
-    }
-    if (Platform.isAndroid) {
-      return TargetPlatform.android;
-    }
+    if (kIsWeb) return TargetPlatform.macOS;
+    if (Platform.isMacOS) return TargetPlatform.macOS;
+    if (Platform.isFuchsia) return TargetPlatform.fuchsia;
+    if (Platform.isLinux) return TargetPlatform.linux;
+    if (Platform.isWindows) return TargetPlatform.windows;
+    if (Platform.isIOS) return TargetPlatform.iOS;
+    if (Platform.isAndroid) return TargetPlatform.android;
     return TargetPlatform.android;
   }
 

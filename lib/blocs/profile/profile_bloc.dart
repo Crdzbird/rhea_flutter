@@ -16,18 +16,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc({
     required this.profileImplementation,
   }) : super(OnIdleProfile()) {
-    on<OnFailureEvent>(
-      (event, emit) => emit(OnFailedProfile(event.error)),
-    );
-    on<OnIdleEvent>(
-      (event, emit) => emit(OnIdleProfile()),
-    );
-    on<OnSuccessEvent>(
-      (event, emit) => emit(OnSuccessProfile(event.profile)),
-    );
-    on<OnLoadingEvent>(
-      (event, emit) => emit(OnLoadingProfile()),
-    );
+    on<OnFailureEvent>((event, emit) => emit(OnFailedProfile(event.error)));
+    on<OnIdleEvent>((event, emit) => emit(OnIdleProfile()));
+    on<OnSuccessEvent>((event, emit) => emit(OnSuccessProfile(event.profile)));
+    on<OnLoadingEvent>((event, emit) => emit(OnLoadingProfile()));
     fetchProfile();
   }
 

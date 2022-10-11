@@ -19,22 +19,12 @@ class StageBloc extends Bloc<StageEvent, StageState> {
     required this.stageImplementation,
     required this.planBloc,
   }) : super(OnIdleStage()) {
-    on<OnFailureEvent>(
-      (event, emit) => emit(OnFailedStage(event.error)),
-    );
-    on<OnIdleEvent>(
-      (event, emit) => emit(OnIdleStage()),
-    );
-    on<OnSuccessEvent>(
-      (event, emit) => emit(OnSuccessStage(event.stage)),
-    );
-    on<OnLoadingEvent>(
-      (event, emit) => emit(OnLoadingStage()),
-    );
+    on<OnFailureEvent>((event, emit) => emit(OnFailedStage(event.error)));
+    on<OnIdleEvent>((event, emit) => emit(OnIdleStage()));
+    on<OnSuccessEvent>((event, emit) => emit(OnSuccessStage(event.stage)));
+    on<OnLoadingEvent>((event, emit) => emit(OnLoadingStage()));
     planSubscription = planBloc.stream.listen((event) {
-      if (event is OnSuccessPlan) {
-        fetchStage(event.plan.currentStage);
-      }
+      if (event is OnSuccessPlan) fetchStage(event.plan.currentStage);
     });
   }
 
@@ -61,7 +51,10 @@ class StageBloc extends Bloc<StageEvent, StageState> {
         final stageJson = await SharedProvider.sharedPreferences.read(
           key: PreferencesType.stage.key,
         );
-        add(OnSuccessEvent(Stage.fromJson(stageJson!)));
+        if (stageJson != null || stageJson!.isNotEmpty) {
+          add(OnSuccessEvent(Stage.fromJson(stageJson)));
+        }
+        add(OnFailureEvent(error.toString()));
       },
     );
   }

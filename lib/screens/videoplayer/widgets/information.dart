@@ -42,7 +42,8 @@ class Information extends StatelessWidget {
                 ),
               )
             : GestureDetector(
-                onTap: () => context.read<PlayerBloc>().displayInformation(),
+                onTap: () =>
+                    context.read<PlayerBloc>().displayInformation(context),
                 child: GlassContainer(
                   borderRadius: BorderRadius.circular(20),
                   shadowStrength: 2,

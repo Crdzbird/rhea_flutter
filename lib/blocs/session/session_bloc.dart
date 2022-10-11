@@ -16,21 +16,11 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     required this.profileImplementation,
   }) : super(const SessionState()) {
     checkSession();
-    on<OnAuthorizedEvent>(
-      (event, emit) => emit(SessionState.authorized()),
-    );
-    on<OnUnauthorizedEvent>(
-      (event, emit) => emit(SessionState.unauthorized()),
-    );
-    on<OnOfflineEvent>(
-      (event, emit) => emit(SessionState.offline()),
-    );
-    on<OnFreeEvent>(
-      (event, emit) => emit(SessionState.free()),
-    );
-    on<OnPaidEvent>(
-      (event, emit) => emit(SessionState.paid()),
-    );
+    on<OnAuthorizedEvent>((event, emit) => emit(SessionState.authorized()));
+    on<OnUnauthorizedEvent>((event, emit) => emit(SessionState.unauthorized()));
+    on<OnOfflineEvent>((event, emit) => emit(SessionState.offline()));
+    on<OnFreeEvent>((event, emit) => emit(SessionState.free()));
+    on<OnPaidEvent>((event, emit) => emit(SessionState.paid()));
   }
 
   final SessionImplementation sessionImplementation;

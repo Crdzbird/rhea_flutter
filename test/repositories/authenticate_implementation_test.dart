@@ -4,13 +4,14 @@ import 'package:rhea_app/models/credentials.dart';
 import 'package:rhea_app/models/network/api_result.dart';
 import 'package:rhea_app/models/network/network_exceptions.dart';
 import 'package:rhea_app/models/session.dart';
+import 'package:rhea_app/repositories/network/remote/data_source/authentication/implementation/authenticate_implementation.dart';
 
 import '../mocks/shared_mocks.mocks.dart';
 
 void main() {
-  late MockAuthenticateImplementation authenticateImplementation;
+  late final AuthenticateImplementation authenticateImplementation;
 
-  setUp(() {
+  setUpAll(() {
     authenticateImplementation = MockAuthenticateImplementation();
   });
 
@@ -29,8 +30,9 @@ void main() {
     );
     result.when(
       success: (data) {
-        expect(data.authToken, 'token');
-        expect(data.refreshToken, 'refreshToken');
+        final session = data as Session;
+        expect(session.authToken, 'token');
+        expect(session.refreshToken, 'refreshToken');
       },
       failure: (error, message) {},
     );

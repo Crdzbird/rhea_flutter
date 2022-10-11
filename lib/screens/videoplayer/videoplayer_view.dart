@@ -20,7 +20,12 @@ class VideoPlayerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         extendBody: true,
-        body: BlocBuilder<PlayerBloc, PlayerState>(
+        body: BlocConsumer<PlayerBloc, PlayerState>(
+          listener: (context, state) {
+            if (state is VideoFinishedState) {
+              context.read<PlayerBloc>().showCompleteWorkoutDialog(context);
+            }
+          },
           builder: (context, state) => Stack(
             children: [
               GestureDetector(

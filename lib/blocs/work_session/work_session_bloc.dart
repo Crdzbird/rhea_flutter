@@ -20,19 +20,13 @@ class WorkSessionBloc extends Bloc<WorkSessionEvent, WorkSessionState> {
     required this.workSessionImplementation,
     required this.stageBloc,
   }) : super(OnIdleWorkSession()) {
-    on<OnFailureEvent>(
-      (event, emit) => emit(OnFailedWorkSession(event.error)),
-    );
-    on<OnIdleEvent>(
-      (event, emit) => emit(OnIdleWorkSession()),
-    );
+    on<OnFailureEvent>((event, emit) => emit(OnFailedWorkSession(event.error)));
+    on<OnIdleEvent>((event, emit) => emit(OnIdleWorkSession()));
     on<OnSuccessEvent>(
       (event, emit) =>
           emit(OnSuccessWorkSession(event.workSessions, event.stageSessions)),
     );
-    on<OnLoadingEvent>(
-      (event, emit) => emit(OnLoadingWorkSession()),
-    );
+    on<OnLoadingEvent>((event, emit) => emit(OnLoadingWorkSession()));
     stageSubscription = stageBloc.stream.listen((event) {
       if (event is OnSuccessStage) {
         buildSessions(event.stage);
